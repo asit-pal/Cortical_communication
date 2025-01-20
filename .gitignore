@@ -1,0 +1,6 @@
+# Ignore everything in mat_sample directory
+mat_sample/*
+
+# Except sample_data.mat
+!mat_sample/sample_data.mat
+Figures/
