@@ -1,0 +1,7 @@
+BLANK_TRIAL_LENGTH	= 1500; % ms
+DRIVEN_TRIAL_LENGTH	= 1280; % ms
+TIME_RES = 10^3;
+
+% Indexes
+V1 = 1;
+V2 = 2;

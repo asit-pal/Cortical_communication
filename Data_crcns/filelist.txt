@@ -1,0 +1,10 @@
+# CRCNS.org 'v1v2-1' dataset files
+# To use this for fetching files, comment out files that are
+# not needed by putting a '#' as the first character on the line (default mode)
+# or put a '+' as the first character to specifiy files to be fetched (+ mode).
+# mode='default' (change to '+' for + mode).
+ docs/crcns_v1v2-1_data_description.docx	24415 (23.8 KB)
+ docs/crcns_v1v2-1_data_description.pdf	80646 (78.7 KB)
+ docs/sessions_description.pdf	32823 (32.0 KB)
+ v1-v2_gratings.zip	149782095 (142.8 MB)
+ checksums.md5	311

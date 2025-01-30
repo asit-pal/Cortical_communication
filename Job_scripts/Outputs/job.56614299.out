@@ -1,0 +1,4 @@
+  File "/home/ap6603/communication-subspace/kohn_data_spont.py", line 8
+    from Data_crcns.v1-v2_gratings.software.ExtractSpikes import ExtractSpikes
+                      ^
+SyntaxError: invalid syntax

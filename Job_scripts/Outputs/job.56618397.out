@@ -1,0 +1,30 @@
+Error: [Errno 2] No such file or directory: '/home/ap6603/communication-subspace/Data_crcns/v1_v2_gratings/mat_neural_data/105l001p26.mat'
+Traceback (most recent call last):
+  File "/ext3/miniforge3/envs/torch-nn/lib/python3.11/site-packages/scipy/io/matlab/_mio.py", line 39, in _open_file
+    return open(file_like, mode), True
+           ^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ap6603/communication-subspace/Data_crcns/v1_v2_gratings/mat_neural_data/105l001p26.mat'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/ap6603/communication-subspace/kohn_data_spont.py", line 111, in <module>
+    main()
+  File "/home/ap6603/communication-subspace/kohn_data_spont.py", line 83, in main
+    neural_data = loadmat(mat_file)['neuralData']
+                  ^^^^^^^^^^^^^^^^^
+  File "/home/ap6603/communication-subspace/loadmat_custom.py", line 44, in loadmat
+    data = sio.loadmat(filename, struct_as_record=False, squeeze_me=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/ext3/miniforge3/envs/torch-nn/lib/python3.11/site-packages/scipy/io/matlab/_mio.py", line 225, in loadmat
+    with _open_file_context(file_name, appendmat) as f:
+  File "/ext3/miniforge3/envs/torch-nn/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/ext3/miniforge3/envs/torch-nn/lib/python3.11/site-packages/scipy/io/matlab/_mio.py", line 17, in _open_file_context
+    f, opened = _open_file(file_like, appendmat, mode)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/ext3/miniforge3/envs/torch-nn/lib/python3.11/site-packages/scipy/io/matlab/_mio.py", line 45, in _open_file
+    return open(file_like, mode), True
+           ^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ap6603/communication-subspace/Data_crcns/v1_v2_gratings/mat_neural_data/105l001p26.mat'

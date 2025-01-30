@@ -56,18 +56,27 @@ def main():
     # 1) Loading and Setup
     # ======================
     
-    # Load the sample data
-    data = scipy.io.loadmat('mat_sample/sample_data.mat')
-    data_X = data['X']          # Source population activity (n_samples x p matrix)
-    Y_V2_data = data['Y_V2']    # Target population activity (n_samples x K matrix)
-    Y_V1_data = data['Y_V1']    # Target population activity (n_samples x K matrix)
+    # # Load the sample data
+    # data = scipy.io.loadmat('mat_sample/sample_data.mat')
+    
+    # data_X = data['X']         # Source population activity (n_samples x p matrix)
+    # Y_V2_data = data['Y_V2']    # Target population activity (n_samples x K matrix)
+    # Y_V1_data = data['Y_V1']    # Target population activity (n_samples x K matrix)
+    
+    # Load the centered firing rates
+    data_X = np.load('Spontaneous_Spike_Data/centered_firing_rates_area_0.npy')
+    Y_V2_data = np.load('Spontaneous_Spike_Data/centered_firing_rates_area_1.npy')
     
     # Initialize parameters
     num_iterations = 100  # Number of iterations for averaging
-    V1_indices = np.arange(0, 79)
-    V2_indices = np.arange(0, 31)
+    V1_indices = np.arange(0, 109)
+    V2_indices = np.arange(0, 30)
     num_dims_used_for_prediction = np.arange(1, 11)
     cv_num_folds = 10
+    
+    s_V1 = 30
+    t_V1 = 30
+    t_V2 = 30
 
     # Initialize dictionary to store aggregated results
     aggregated_results = {
@@ -88,15 +97,15 @@ def main():
         print(f"  Iteration {iteration}/{num_iterations}")
         
         # Random selection of indices for each iteration
-        X_indices = np.random.choice(V1_indices, size=15, replace=False)
+        X_indices = np.random.choice(V1_indices, size=s_V1, replace=False)
         remaining_V1_indices = np.setdiff1d(V1_indices, X_indices)
-        Y_V1_indices = np.random.choice(remaining_V1_indices, size=15, replace=False)
-        Y_V2_indices = np.random.choice(V2_indices, size=15, replace=False)
+        Y_V1_indices = np.random.choice(remaining_V1_indices, size=t_V1, replace=False)
+        Y_V2_indices = np.random.choice(V2_indices, size=t_V2, replace=False)
         
         # Extract data for selected indices
-        X = data_X[:, X_indices]
-        Y_V1 = data_X[:, Y_V1_indices]
-        Y_V2 = Y_V2_data[:, Y_V2_indices]
+        X = data_X[4000:8000, X_indices]
+        Y_V1 = data_X[4000:8000, Y_V1_indices]
+        Y_V2 = Y_V2_data[4000:8000, Y_V2_indices]
 
         # =====================================
         # 2) Perform RRR for Y_V1 and Y_V2
@@ -185,7 +194,7 @@ def main():
     plt.grid(True)
     
     # Save the plot
-    plt.savefig('Figures/Python_example_shuffle_indices_15_averaged.pdf', dpi=400, bbox_inches='tight')
+    plt.savefig('Figures/Spontaneous/Spontaneous_Spike_Data_30_30_30_4-8k.pdf', dpi=400, bbox_inches='tight')
     plt.show()
 
     return final_results, num_dims_used_for_prediction

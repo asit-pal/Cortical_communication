@@ -1,0 +1,14 @@
+Error: not enough values to unpack (expected 3, got 2)
+Traceback (most recent call last):
+  File "/home/ap6603/communication-subspace/kohn_data_spont.py", line 81, in <module>
+    main()
+  File "/home/ap6603/communication-subspace/kohn_data_spont.py", line 62, in main
+    spikes, stim = ExtractSpikes(neural_data, bin_width=100, trial_period='BLANK')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ap6603/communication-subspace/Data_crcns/v1_v2_gratings/software/ExtractSpikes.py", line 68, in ExtractSpikes
+    spikes[pop_idx][:,:,trial_idx//2] = BinTime(
+                                        ^^^^^^^^
+  File "/home/ap6603/communication-subspace/Data_crcns/v1_v2_gratings/software/BinTime.py", line 15, in BinTime
+    num_units, trial_length, num_trials = spike_rasters.shape
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: not enough values to unpack (expected 3, got 2)

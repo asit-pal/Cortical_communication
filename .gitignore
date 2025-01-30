@@ -4,3 +4,4 @@ mat_sample/*
 # Except sample_data.mat
 !mat_sample/sample_data.mat
 Figures/
+Spontaneous_Spike_Data/

@@ -1,0 +1,16 @@
+
+Processing Area 0
+
+Area 0 Statistics:
+Shape: (48000, 159) (trials × neurons)
+Total spikes: 5431947.0
+Mean spikes per neuron: 34163.19
+Number of neurons: 159
+
+Processing Area 1
+
+Area 1 Statistics:
+Shape: (48000, 25) (trials × neurons)
+Total spikes: 491554.0
+Mean spikes per neuron: 19662.16
+Number of neurons: 25
