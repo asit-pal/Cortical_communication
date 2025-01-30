@@ -5,3 +5,4 @@ mat_sample/*
 !mat_sample/sample_data.mat
 Figures/
 Spontaneous_Spike_Data/
+Data_crcns/v1_v2_gratings/mat_neural_data/
