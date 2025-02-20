@@ -23,8 +23,9 @@ cd "${BASE_DIR}"
 
 
 # python "${BASE_DIR}/Data_crcns/v1-v2_gratings/software/example_pca.py"  # Using full path to python script
-python "${BASE_DIR}/example.py"
+# python "${BASE_DIR}/example.py"
+# python "${BASE_DIR}/Spontaneous_data.py"
 # python "${BASE_DIR}/kohn_data_spont.py"
 # python "${BASE_DIR}/plot_neural_activity.py"
-
+python "${BASE_DIR}/Full_contrast_data.py"
 EOF

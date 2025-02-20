@@ -2,6 +2,7 @@ import numpy as np
 import scipy.io
 from sklearn.model_selection import KFold
 import matplotlib.pyplot as plt
+import os
 
 # Import custom functions from their respective modules
 from regress_methods.ReducedRankRegress import reduced_rank_regress
@@ -20,7 +21,7 @@ def perform_rrr_cv(X, Y, num_dims, n_folds=1, loss_measure='NSE'):
         loss_measure (str): Loss measure to use ('NSE' by default).
 
     Returns:
-        tuple: (mean_loss, std_error) across cross-validation folds.
+        tuple: (mean_loss, std_dev) across cross-validation folds.
     """
     # Initialize K-fold cross-validation
     kf = KFold(n_splits=n_folds, shuffle=True, random_state=42)
@@ -45,11 +46,11 @@ def perform_rrr_cv(X, Y, num_dims, n_folds=1, loss_measure='NSE'):
             
             cv_results[i, j] = loss
     
-    # Calculate mean and standard error across folds
+    # Calculate mean and standard deviation (not standard error) across folds
     mean_loss = np.mean(cv_results, axis=1)
-    std_error = np.std(cv_results, axis=1) / np.sqrt(n_folds)
+    std_dev = np.std(cv_results, axis=1)  # Removed division by sqrt(n_folds)
     
-    return mean_loss, std_error
+    return mean_loss, std_dev
 
 def main():
     # ======================
@@ -72,7 +73,7 @@ def main():
     V1_indices = np.arange(0, 109)
     V2_indices = np.arange(0, 30)
     num_dims_used_for_prediction = np.arange(1, 11)
-    cv_num_folds = 10
+    cv_num_folds = 2
     
     s_V1 = 30
     t_V1 = 30
@@ -82,11 +83,11 @@ def main():
     aggregated_results = {
         'Y_V1': {
             'mean_loss_runs': [],
-            'std_error_runs': []
+            'std_dev_runs': []
         },
         'Y_V2': {
             'mean_loss_runs': [],
-            'std_error_runs': []
+            'std_dev_runs': []
         }
     }
 
@@ -111,33 +112,33 @@ def main():
         # 2) Perform RRR for Y_V1 and Y_V2
         # =====================================
         
-        mean_loss_Y_V1, std_error_Y_V1 = perform_rrr_cv(
+        mean_loss_Y_V1, std_dev_Y_V1 = perform_rrr_cv(
             X, Y_V1, num_dims_used_for_prediction, n_folds=cv_num_folds, loss_measure='NSE'
         )
         
-        mean_loss_Y_V2, std_error_Y_V2 = perform_rrr_cv(
+        mean_loss_Y_V2, std_dev_Y_V2 = perform_rrr_cv(
             X, Y_V2, num_dims_used_for_prediction, n_folds=cv_num_folds, loss_measure='NSE'
         )
 
         # Store results for this iteration
         aggregated_results['Y_V1']['mean_loss_runs'].append(mean_loss_Y_V1)
-        aggregated_results['Y_V1']['std_error_runs'].append(std_error_Y_V1)
+        aggregated_results['Y_V1']['std_dev_runs'].append(std_dev_Y_V1)
         aggregated_results['Y_V2']['mean_loss_runs'].append(mean_loss_Y_V2)
-        aggregated_results['Y_V2']['std_error_runs'].append(std_error_Y_V2)
+        aggregated_results['Y_V2']['std_dev_runs'].append(std_dev_Y_V2)
 
     # =====================================
     # 3) Compute Final Averaged Results
     # =====================================
     
-    # Calculate mean and standard error across all iterations
+    # Calculate mean and standard deviation across all iterations
     final_results = {
         'Y_V1': {
             'mean_loss': np.mean(aggregated_results['Y_V1']['mean_loss_runs'], axis=0),
-            'std_error': np.std(aggregated_results['Y_V1']['mean_loss_runs'], axis=0) / np.sqrt(num_iterations)
+            'std_dev': np.std(aggregated_results['Y_V1']['mean_loss_runs'], axis=0)  # Removed division by sqrt(num_iterations)
         },
         'Y_V2': {
             'mean_loss': np.mean(aggregated_results['Y_V2']['mean_loss_runs'], axis=0),
-            'std_error': np.std(aggregated_results['Y_V2']['mean_loss_runs'], axis=0) / np.sqrt(num_iterations)
+            'std_dev': np.std(aggregated_results['Y_V2']['mean_loss_runs'], axis=0)  # Removed division by sqrt(num_iterations)
         }
     }
 
@@ -146,56 +147,75 @@ def main():
     # =====================================
     
     # For Y_V1
-    cv_loss_rrr_Y_V1 = np.vstack([final_results['Y_V1']['mean_loss'], 
-                                 final_results['Y_V1']['std_error']])
-    opt_dim_Y_V1 = model_select(cv_loss_rrr_Y_V1, num_dims_used_for_prediction)
-    print(f"\nOptimal number of predictive dimensions for RRR with Y_V1: {opt_dim_Y_V1}")
+    # cv_loss_rrr_Y_V1 = np.vstack([final_results['Y_V1']['mean_loss'], 
+    #                              final_results['Y_V1']['std_dev']])
+    # opt_dim_Y_V1 = model_select(cv_loss_rrr_Y_V1, num_dims_used_for_prediction)
+    # print(f"\nOptimal number of predictive dimensions for RRR with Y_V1: {opt_dim_Y_V1}")
     
     # For Y_V2
-    cv_loss_rrr_Y_V2 = np.vstack([final_results['Y_V2']['mean_loss'], 
-                                 final_results['Y_V2']['std_error']])
-    opt_dim_Y_V2 = model_select(cv_loss_rrr_Y_V2, num_dims_used_for_prediction)
-    print(f"Optimal number of predictive dimensions for RRR with Y_V2: {opt_dim_Y_V2}")
+    # cv_loss_rrr_Y_V2 = np.vstack([final_results['Y_V2']['mean_loss'], 
+    #                              final_results['Y_V2']['std_dev']])
+    # opt_dim_Y_V2 = model_select(cv_loss_rrr_Y_V2, num_dims_used_for_prediction)
+    # print(f"Optimal number of predictive dimensions for RRR with Y_V2: {opt_dim_Y_V2}")
 
     # =====================================
     # 5) Plotting RRR Cross-validation Results
     # =====================================
     
+    # Plotting with fill_between for standard deviation bands
     plt.figure(figsize=(10, 6))
     
     # Plot RRR results for Y_V1
-    plt.errorbar(
+    plt.fill_between(
+        num_dims_used_for_prediction,
+        1 - final_results['Y_V1']['mean_loss'] - 0.5*final_results['Y_V1']['std_dev'],
+        1 - final_results['Y_V1']['mean_loss'] + 0.5*final_results['Y_V1']['std_dev'],
+        color='gray', 
+        alpha=0.1
+    )
+    plt.plot(
         num_dims_used_for_prediction,
         1 - final_results['Y_V1']['mean_loss'],
-        final_results['Y_V1']['std_error'],
-        fmt='o--',
-        label='RRR with Y_V1',
+        marker='o',
+        linestyle='--',
+        linewidth=2,
         color='blue',
-        markerfacecolor='blue',
+        markeredgecolor='black',
+        label='RRR with Y_V1',
         markersize=8
     )
     
     # Plot RRR results for Y_V2
-    plt.errorbar(
+    plt.fill_between(
+        num_dims_used_for_prediction,
+        1 - final_results['Y_V2']['mean_loss'] - 0.5*final_results['Y_V2']['std_dev'],
+        1 - final_results['Y_V2']['mean_loss'] + 0.5*final_results['Y_V2']['std_dev'],
+        color='gray', 
+        alpha=0.1
+    )
+    plt.plot(
         num_dims_used_for_prediction,
         1 - final_results['Y_V2']['mean_loss'],
-        final_results['Y_V2']['std_error'],
-        fmt='s--',
-        label='RRR with Y_V2',
+        marker='s',
+        linestyle='--',
+        linewidth=2,
         color='green',
-        markerfacecolor='green',
+        markeredgecolor='black',
+        label='RRR with Y_V2',
         markersize=8
     )
     
     plt.xlabel('Number of Predictive Dimensions')
     plt.ylabel('Predictive Performance (1 - NSE)')
-    plt.title('RRR Cross-Validation Results for Y_V1 and Y_V2 as Targets')
+    plt.title('RRR Results for Y_V1 and Y_V2 as Targets')
     plt.legend(loc='upper right')
     plt.grid(True)
     
-    # Save the plot
-    plt.savefig('Figures/Spontaneous/Spontaneous_Spike_Data_30_30_30_4-8k.pdf', dpi=400, bbox_inches='tight')
+    plt.savefig('Figures/Spontaneous/Spontaneous_Spike_Data_30_30_30_4-8k_100_iter.pdf', dpi=400, bbox_inches='tight')
     plt.show()
+
+    # Save the final results dictionary
+    np.save('Spontaneous_Spike_Data/Spontaneous_30_30_30_4-8k_100_iter_std_dev.npy', final_results)
 
     return final_results, num_dims_used_for_prediction
 
